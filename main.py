@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from bs4 import BeautifulSoup
 import requests
+import uvicorn
 
 app = FastAPI()
 
@@ -19,3 +20,6 @@ async def get_api_by_category(category: str, page: int = 0, mobile = False):
     for i in html.find_all("img", {"class":"lazy"}):
         wallpapers.append(i['data-src'])
     return wallpapers
+
+if __name__ == "__main__":
+  uvicorn.run("main:app", host="maajid-wallpaper-api.vercel.app", port=8000, reload=True)
