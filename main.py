@@ -22,4 +22,4 @@ async def get_api_by_category(category: str, page: int = 0, mobile = False):
     return wallpapers
 
 if __name__ == "__main__":
-  uvicorn.run("main:app", host="maajid-wallpaper-api.vercel.app", port=8000, reload=True)
+  uvicorn.run(app)
