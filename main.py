@@ -10,7 +10,7 @@ def index():
     return {"message":"Check me on github https://github.com/athallahmaajid"}
 
 @app.get('/wallpaper')
-async def get_api_by_category(category: str, page: int = 0, mobile = False):
+def get_api_by_category(category, page = 0, mobile = False):
     if mobile:
         response = requests.get("https://www.wallpaperflare.com/search?wallpaper=" + category + "&mobile=ok" + "&page=",page)
     else:
@@ -22,4 +22,4 @@ async def get_api_by_category(category: str, page: int = 0, mobile = False):
     return wallpapers
 
 if __name__ == "__main__":
-  uvicorn.run(app)
+  uvicorn.run("server.api:app", host="0.0.0.0", port=8000, reload=True)
