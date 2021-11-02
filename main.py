@@ -13,12 +13,15 @@ def index():
         "docs":"/docs"
     }
 
-@app.get('/wallpaper')
-def get_api_by_category(category, page = 1, mobile = False):
-    if mobile:
-        response = requests.get("https://www.wallpaperflare.com/search?wallpaper=" + category + "&mobile=ok" + "&page=",page)
+@app.get('/wallpapers')
+def get_api_by_category(category = None, page = 1, mobile = False):
+    if category == None:
+        response = requests.get("https://www.wallpaperflare.com/")
     else:
-        response = requests.get("https://www.wallpaperflare.com/search?wallpaper=" + category + "&page=",page)
+        if mobile:
+            response = requests.get("https://www.wallpaperflare.com/search?wallpaper=" + category + "&mobile=ok" + "&page=",page)
+        else:
+            response = requests.get("https://www.wallpaperflare.com/search?wallpaper=" + category + "&page=",page)
     html = BeautifulSoup(response.text, "html.parser")
     wallpapers = []
     for i in html.find_all("img", {"class":"lazy"}):
