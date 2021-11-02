@@ -7,7 +7,11 @@ app = FastAPI()
 
 @app.get("/")
 def index():
-    return {"message":"Check me on github https://github.com/athallahmaajid"}
+    return {
+        "message":"Check me on github https://github.com/athallahmaajid",
+        "repo": "https://github.com/athallahmaajid/wallpaper-api",
+        "docs":"/docs"
+    }
 
 @app.get('/wallpaper')
 def get_api_by_category(category, page = 1, mobile = False):
