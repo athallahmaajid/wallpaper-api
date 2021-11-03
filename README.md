@@ -1,5 +1,5 @@
 # wallpaper-api
-Wallpaper API from https://wallpaperscraft.com
+Wallpaper API from [wallpaperscraft](https://wallpaperscraft.com){target="_blank"}
 
 for API documentation see https://maajid-wallpaper-api.deta.dev/docs
 
