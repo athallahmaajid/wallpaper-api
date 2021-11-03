@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from bs4 import BeautifulSoup
-import requests
+from requests import get
 import uvicorn
 
 app = FastAPI()
@@ -14,19 +14,30 @@ def index():
     }
 
 @app.get('/wallpapers')
-def get_api_by_category(category = None, page = 1, mobile = False):
-    if category == None:
-        response = requests.get("https://www.wallpaperflare.com/")
-    else:
-        if mobile:
-            response = requests.get("https://www.wallpaperflare.com/search?wallpaper=" + category + "&mobile=ok" + "&page=",page)
-        else:
-            response = requests.get("https://www.wallpaperflare.com/search?wallpaper=" + category + "&page=",page)
+def get_wallpapers(mobile = False, page = 1):
+    response = get(f"https://wallpaperscraft.com/all/page{page}")
     html = BeautifulSoup(response.text, "html.parser")
     wallpapers = []
-    for i in html.find_all("img", {"class":"lazy"}):
-        wallpapers.append(i['data-src'])
-    return wallpapers
+    for i in html.find_all("img", {"class":"wallpapers__image"}):
+        if mobile:
+            wallpapers.append(i['src'].replace("300x168", "480x854"))
+        else:
+            wallpapers.append(i['src'].replace("300x168", "1920x1080"))
+    return {"result":wallpapers}
+
+@app.get('/wallpapers/search')
+def get_wallpapers_by_query(query, page = 1, mobile = False):
+    response = get(f"https://wallpaperscraft.com/search/?order=&page={page}&query={query}")
+    html = BeautifulSoup(response.text, "html.parser")
+    print(html.find("img", {"class":"wallpapers__image"}))
+    wallpapers = []
+    for i in html.find_all("img", {"class":"wallpapers__image"}):
+        print(i)
+        if mobile:
+            wallpapers.append(i['src'].replace("300x168", "480x854"))
+        else:
+            wallpapers.append(i['src'].replace("300x168", "1920x1080"))
+    return {"result":wallpapers}
 
 if __name__ == "__main__":
   uvicorn.run(app)
