@@ -20,23 +20,24 @@ def get_wallpapers(mobile = False, page = 1):
     wallpapers = []
     for i in html.find_all("img", {"class":"wallpapers__image"}):
         if mobile:
-            wallpapers.append(i['src'].replace("300x168", "480x854"))
+            wallpapers.append(i['src'].replace("300x168", "720x1280"))
         else:
             wallpapers.append(i['src'].replace("300x168", "1920x1080"))
     return {"result":wallpapers}
 
 @app.get('/wallpapers/search')
-def get_wallpapers_by_query(query, page = 1, mobile = False):
-    response = get(f"https://wallpaperscraft.com/search/?order=&page={page}&query={query}")
+def get_api_by_query(query, page = 1, mobile = False):
+    if mobile:
+        response = get("https://mobile.alphacoders.com/by-resolution/9/720x1280-Wallpapers?search=" + query + "&page=" + str(page))
+    else:
+        response = get("https://wall.alphacoders.com/search.php?search=" + query + "&page=" + str(page))
     html = BeautifulSoup(response.text, "html.parser")
-    print(html.find("img", {"class":"wallpapers__image"}))
     wallpapers = []
-    for i in html.find_all("img", {"class":"wallpapers__image"}):
-        print(i)
+    for i in html.find_all("img", {"class":"img-responsive"}):
         if mobile:
-            wallpapers.append(i['src'].replace("300x168", "480x854"))
+            wallpapers.append(i['src'].replace("thumb-", "thumb-1920-"))
         else:
-            wallpapers.append(i['src'].replace("300x168", "1920x1080"))
+            wallpapers.append(i['src'].replace("thumbbig-", "thumb-1920-"))
     return {"result":wallpapers}
 
 if __name__ == "__main__":
