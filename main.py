@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from bs4 import BeautifulSoup
 from requests import get
+import requests
 import uvicorn
 
 app = FastAPI()
@@ -27,12 +28,15 @@ def get_wallpapers(mobile = False, page = 1):
 
 @app.get('/wallpapers/search')
 def get_api_by_query(query, page = 1, mobile = False):
-    if mobile:
-        response = get("https://mobile.alphacoders.com/by-resolution/9/720x1280-Wallpapers?search=" + query + "&page=" + str(page))
-    else:
-        response = get("https://wall.alphacoders.com/search.php?search=" + query + "&page=" + str(page))
-    html = BeautifulSoup(response.text, "html.parser")
     wallpapers = []
+    response = get("https://wall.alphacoders.com/search.php?search=" + query + "&page=" + str(page))
+    html = BeautifulSoup(response.text, "html.parser")
+    if mobile:
+        if html.find_all("a", {"class":"custom-nav-tabs-element"}) != []:
+            response = requests.get(html.find_all("a", {"class":"custom-nav-tabs-element"})[1]['href'] + "?page=" + str(page))
+            html = BeautifulSoup(response.text, "html.parser")
+        else:
+            return {"result":wallpapers}
     for i in html.find_all("img", {"class":"img-responsive"}):
         if mobile:
             wallpapers.append(i['src'].replace("thumb-", "thumb-1920-"))
